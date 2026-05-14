@@ -88,7 +88,24 @@ export default function SDK() {
   };
 
   return (
-    <section id="sdk" className="py-32 px-6 relative bg-[#050505]" ref={ref}>
+    <section
+      id="sdk"
+      className="py-32 px-6 relative mesh-gradient-sdk overflow-hidden"
+      ref={ref}
+    >
+      {/* Background grid */}
+      <div className="absolute inset-0 grid-pattern opacity-20" />
+
+      {/* Floating ambient orbs */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="floating-orb orb-1" style={{ width: '280px', height: '280px', top: '20%', left: '10%', animationDelay: '-4s' }} />
+        <div className="floating-orb orb-2" style={{ width: '320px', height: '320px', bottom: '10%', right: '5%', animationDelay: '-9s' }} />
+        <div className="floating-orb orb-3" style={{ width: '200px', height: '200px', top: '60%', left: '70%', animationDelay: '-14s' }} />
+      </div>
+
+      {/* Decorative shards */}
+      <div className="shard-deco shard-left" />
+      <div className="shard-deco shard-right" />
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <motion.div
@@ -103,8 +120,9 @@ export default function SDK() {
           <h2 className="text-4xl md:text-5xl font-bold text-[#FAFAFA] mb-6">
             Powerful SDK
           </h2>
+          <div className="section-divider mb-6" />
           <p className="text-[#888] text-xl max-w-2xl mx-auto">
-            Programmatic control with a clean TypeScript API. Start the proxy, 
+            Programmatic control with a clean TypeScript API. Start the proxy,
             intercept requests, or stream events — all from code.
           </p>
         </motion.div>
@@ -114,10 +132,10 @@ export default function SDK() {
           initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="gold-border-glow rounded-2xl overflow-hidden"
+          className="glass-card rounded-2xl overflow-hidden"
         >
           {/* Tabs */}
-          <div className="flex border-b border-[#1F1F1F]">
+          <div className="flex border-b border-[#1F1F1F]/50">
             {codeExamples.map((example, index) => (
               <button
                 key={example.title}

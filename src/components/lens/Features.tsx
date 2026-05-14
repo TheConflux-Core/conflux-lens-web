@@ -51,8 +51,22 @@ export default function Features() {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
-    <section id="features" className="py-32 px-6 relative" ref={ref}>
-      <div className="max-w-7xl mx-auto">
+    <section
+      id="features"
+      className="py-32 px-6 relative mesh-gradient-features overflow-hidden"
+      ref={ref}
+    >
+      {/* Floating orbs background */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="floating-orb orb-1" style={{ width: '350px', height: '350px', top: '5%', left: '-15%', animationDelay: '-2s' }} />
+        <div className="floating-orb orb-2" style={{ width: '280px', height: '280px', top: '70%', right: '-10%', animationDelay: '-7s' }} />
+      </div>
+
+      {/* Decorative shards */}
+      <div className="shard-deco shard-left" />
+      <div className="shard-deco shard-right" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -66,8 +80,9 @@ export default function Features() {
           <h2 className="text-4xl md:text-5xl font-bold text-[#FAFAFA] mb-6">
             Everything Your AI Agent Hides
           </h2>
+          <div className="section-divider mb-6" />
           <p className="text-[#888] text-xl max-w-2xl mx-auto">
-            AI agents send complex HTTP payloads you can't see. Conflux Lens exposes 
+            AI agents send complex HTTP payloads you can't see. Conflux Lens exposes
             the full picture — from raw JSON to token counts.
           </p>
         </motion.div>
@@ -80,12 +95,12 @@ export default function Features() {
               initial={{ opacity: 0, y: 40 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="feature-card rounded-2xl p-8 group cursor-default"
+              className="glass-card rounded-2xl p-8 group cursor-default"
             >
               {/* Icon */}
-              <div 
-                className="feature-icon w-14 h-14 rounded-xl bg-gradient-to-br from-[#D4AF37]/20 to-[#B8860B]/20 flex items-center justify-center mb-6 transition-all duration-300"
-                style={{ 
+              <div
+                className="feature-icon w-14 h-14 rounded-xl bg-gradient-to-br from-[#D4AF37]/20 to-[#B8860B]/20 flex items-center justify-center mb-6 transition-all duration-300 icon-lift"
+                style={{
                   border: `1px solid ${feature.color}33`,
                   boxShadow: `0 0 20px ${feature.color}11`
                 }}
@@ -94,18 +109,19 @@ export default function Features() {
               </div>
 
               {/* Content */}
-              <h3 className="text-[#FAFAFA] text-xl font-semibold mb-3 group-hover:text-[#F4D03F] transition-colors">
+              <h3 className="text-[#FAFAFA] text-xl font-semibold mb-3 group-hover:text-[#F4D03F] transition-colors title-underline pb-2">
                 {feature.title}
               </h3>
               <p className="text-[#888] leading-relaxed">
                 {feature.description}
               </p>
 
-              {/* Corner accent */}
-              <div 
-                className="absolute top-0 right-0 w-20 h-20 opacity-0 group-hover:opacity-100 transition-opacity"
+              {/* Corner accent - soft radial glow */}
+              <div
+                className="absolute top-0 right-0 w-32 h-32 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                 style={{
-                  background: `radial-gradient(circle at top right, ${feature.color}08, transparent 70%)`
+                  background: `radial-gradient(circle at top right, ${feature.color}15, transparent 70%)`,
+                  filter: 'blur(8px)'
                 }}
               />
             </motion.div>

@@ -23,8 +23,25 @@ export default function Compare() {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
-    <section id="compare" className="py-32 px-6 relative" ref={ref}>
-      <div className="max-w-5xl mx-auto">
+    <section
+      id="compare"
+      className="py-32 px-6 relative mesh-gradient-compare overflow-hidden"
+      ref={ref}
+    >
+      {/* Background grid */}
+      <div className="absolute inset-0 grid-pattern opacity-20" />
+
+      {/* Floating ambient orbs */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="floating-orb orb-1" style={{ width: '320px', height: '320px', top: '10%', left: '-10%', animationDelay: '-5s' }} />
+        <div className="floating-orb orb-3" style={{ width: '240px', height: '240px', bottom: '15%', left: '30%', animationDelay: '-11s' }} />
+      </div>
+
+      {/* Decorative shards */}
+      <div className="shard-deco shard-left" />
+      <div className="shard-deco shard-right" />
+
+      <div className="max-w-5xl mx-auto relative z-10">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -38,6 +55,7 @@ export default function Compare() {
           <h2 className="text-4xl md:text-5xl font-bold text-[#FAFAFA] mb-6">
             Built for AI Agents
           </h2>
+          <div className="section-divider mb-6" />
           <p className="text-[#888] text-xl max-w-2xl mx-auto">
             BurpSuite was built for web security. We built Lens for AI agent debugging.
           </p>
@@ -48,15 +66,15 @@ export default function Compare() {
           initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="gold-border-glow rounded-2xl overflow-hidden"
+          className="glass-card rounded-2xl overflow-hidden"
         >
           {/* Header */}
-          <div className="grid grid-cols-3 bg-[#0D0D0D] border-b border-[#1F1F1F]">
+          <div className="grid grid-cols-3 bg-[#0D0D0D]/80 border-b border-[#1F1F1F]/50">
             <div className="p-6 text-[#888] font-medium">Feature</div>
-            <div className="p-6 text-center bg-[#0D0D0D]">
+            <div className="p-6 text-center bg-[#0D0D0D]/80">
               <span className="shimmer-text font-bold text-lg">Conflux Lens</span>
             </div>
-            <div className="p-6 text-center bg-[#0D0D0D] text-[#888]">
+            <div className="p-6 text-center bg-[#0D0D0D]/80 text-[#888]">
               BurpSuite Pro
             </div>
           </div>
@@ -68,8 +86,8 @@ export default function Compare() {
               initial={{ opacity: 0, x: -20 }}
               animate={isInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.4, delay: 0.3 + index * 0.05 }}
-              className={`grid grid-cols-3 border-b border-[#1F1F1F] last:border-b-0 ${
-                index % 2 === 0 ? 'bg-[#0D0D0D]' : 'bg-[#080808]'
+              className={`grid grid-cols-3 border-b border-[#1F1F1F]/30 last:border-b-0 ${
+                index % 2 === 0 ? 'bg-[#0D0D0D]/40' : 'bg-[#080808]/40'
               }`}
             >
               <div className="p-5 text-[#FAFAFA] font-medium">{row.feature}</div>

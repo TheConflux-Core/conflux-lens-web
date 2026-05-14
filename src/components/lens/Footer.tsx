@@ -10,8 +10,19 @@ export default function Footer() {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
-    <footer ref={ref} className="py-20 px-6 border-t border-[#1F1F1F]">
-      <div className="max-w-7xl mx-auto">
+    <footer
+      ref={ref}
+      className="py-20 px-6 border-t border-[#1F1F1F] relative overflow-hidden"
+      style={{
+        background: 'linear-gradient(180deg, #050505 0%, #0a0a0a 50%, #0D0D0D 100%)'
+      }}
+    >
+      {/* Subtle background glow */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="floating-orb orb-2" style={{ width: '400px', height: '400px', top: '-20%', left: '30%', animationDelay: '-6s', opacity: 0.08 }} />
+      </div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}

@@ -72,9 +72,23 @@ export default function QuickStart() {
   }, [activeStep]);
 
   return (
-    <section id="quickstart" className="py-32 px-6 relative bg-[#050505]" ref={ref}>
+    <section
+      id="quickstart"
+      className="py-32 px-6 relative mesh-gradient-quickstart overflow-hidden"
+      ref={ref}
+    >
       {/* Background grid */}
-      <div className="absolute inset-0 grid-pattern opacity-50" />
+      <div className="absolute inset-0 grid-pattern opacity-30" />
+
+      {/* Floating ambient orbs */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="floating-orb orb-2" style={{ width: '300px', height: '300px', animationDelay: '-3s' }} />
+        <div className="floating-orb orb-1" style={{ width: '220px', height: '220px', top: '40%', left: '60%', animationDelay: '-8s' }} />
+      </div>
+
+      {/* Decorative shards */}
+      <div className="shard-deco shard-left" />
+      <div className="shard-deco shard-right" />
       
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
@@ -90,6 +104,7 @@ export default function QuickStart() {
           <h2 className="text-4xl md:text-5xl font-bold text-[#FAFAFA] mb-6">
             Quick Start Guide
           </h2>
+          <div className="section-divider mb-6" />
           <p className="text-[#888] text-xl max-w-2xl mx-auto">
             From zero to seeing every AI API call in under a minute.
           </p>
@@ -127,14 +142,14 @@ export default function QuickStart() {
                 <p className="text-[#888] mb-4">{step.description}</p>
 
                 {/* Code block */}
-                <div className="code-block">
+                <div className="code-block code-dressed mt-4">
                   <div className="code-header">
                     <div className="dot dot-red" />
                     <div className="dot dot-yellow" />
                     <div className="dot dot-green" />
                     <span className="text-[#888] text-sm ml-2">{step.title.toLowerCase().replace(' ', '-')}</span>
                   </div>
-                  <pre className="p-4 font-mono text-sm overflow-x-auto">
+                  <pre className="p-4 font-mono text-sm overflow-x-auto bg-[#080808]">
                     {step.code.split('\n').slice(0, typedLines).map((line, i) => (
                       <div key={i} className={line.startsWith('#') ? 'text-[#888]' : 'text-[#FAFAFA]'}>
                         {line || ' '}

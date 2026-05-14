@@ -82,7 +82,7 @@ function LensCore() {
 
 function SubtleGlowRing() {
   const ringRef = useRef<THREE.Mesh>(null);
-  
+
   useFrame(({ clock }) => {
     if (ringRef.current) {
       // Near-static — just a subtle tilt oscillation
@@ -92,13 +92,13 @@ function SubtleGlowRing() {
 
   return (
     <mesh ref={ringRef} rotation={[Math.PI / 2, 0, 0]}>
-      <torusGeometry args={[2.8, 0.008, 8, 100]} />
-      <meshStandardMaterial 
-        color="#D4AF37" 
-        emissive="#D4AF37" 
-        emissiveIntensity={0.3}
+      <torusGeometry args={[2.8, 0.003, 8, 100]} />
+      <meshStandardMaterial
+        color="#D4AF37"
+        emissive="#D4AF37"
+        emissiveIntensity={0.08}
         transparent
-        opacity={0.5}
+        opacity={0.15}
       />
     </mesh>
   );
