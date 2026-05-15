@@ -20,11 +20,15 @@ export default function Navigation() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="relative">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#D4AF37] to-[#B8860B] flex items-center justify-center ring-1 ring-[#D4AF37]/30">
-              <span className="text-black font-bold text-lg">L</span>
-            </div>
-            <div className="absolute -inset-1 bg-gradient-to-r from-[#F4D03F] to-[#D4AF37] rounded-lg blur opacity-30 -z-10" />
+          <div className="relative w-10 h-10">
+            {/* Real Conflux Lens emblem — transparent PNG */}
+            <img
+              src="/favicon.png"
+              alt="Conflux Lens"
+              className="w-full h-full object-contain drop-shadow-[0_0_8px_rgba(212,175,55,0.4)]"
+            />
+            {/* Subtle glow ring behind */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-[#F4D03F] to-[#D4AF37] rounded-full blur opacity-20 -z-10" />
           </div>
           <div>
             <span className="text-[#F4D03F] font-bold text-xl tracking-tight">Conflux Lens</span>
