@@ -31,11 +31,15 @@ export default function Footer() {
         >
           {/* Brand */}
           <div className="md:col-span-2">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#D4AF37] to-[#B8860B] flex items-center justify-center">
-                <span className="text-black font-bold text-lg">L</span>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-16 h-16">
+                <img
+                  src="/favicon.png"
+                  alt="Conflux Lens"
+                  className="w-full h-full object-contain"
+                />
               </div>
-              <span className="text-[#F4D03F] font-bold text-xl">Conflux Lens</span>
+              <span className="text-[#F4D03F] font-bold text-2xl">Conflux Lens</span>
             </div>
             <p className="text-[#888] max-w-sm mb-6">
               Open source HTTP proxy for AI agent developers. 
