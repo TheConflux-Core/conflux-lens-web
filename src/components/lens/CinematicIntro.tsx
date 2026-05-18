@@ -35,8 +35,9 @@ function emitBursts(canvas: HTMLCanvasElement | null, cx: number, cy: number) {
       if (p.life <= 0) continue;
       alive = true;
       p.x += p.vx; p.y += p.vy; p.vy += 0.15; p.life -= p.decay;
+      const r = Math.max(0, p.r * p.life);
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r * p.life, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
       ctx.fillStyle = `hsla(${p.hue}, 92%, 68%, ${p.life * 0.85})`;
       ctx.fill();
     }
