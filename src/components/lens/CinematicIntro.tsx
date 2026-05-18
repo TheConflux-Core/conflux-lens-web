@@ -81,39 +81,37 @@ export default function CinematicIntro() {
     });
 
     // ── T+0.0 — fade in black
-    tl.to(overlay, { opacity: 1, duration: 0.35, ease: 'power2.out' });
+    tl.to(overlay, { opacity: 1, duration: 0.3, ease: 'power2.out' });
 
-    // ── T+0.35 — emblem springs into center with a slight rotational unwind
+    // ── T+0.3 — emblem springs into center + particle burst simultaneously
     tl.to(emblem, {
       opacity: 1, scale: 1, rotation: 0,
-      duration: 0.9, ease: 'back.out(1.7)',
-    }, 0.35);
-
-    // ── T+1.1 — gold glow bloom
-    tl.to(emblem, {
-      filter: 'drop-shadow(0 0 28px rgba(212,175,55,0.55))',
-      duration: 0.4,
-    }, 1.1);
-
-    // ── T+1.5 — particle burst from center
+      duration: 0.8, ease: 'back.out(1.7)',
+    }, 0.3);
     tl.add(() => {
       console.log('[CinematicIntro] 💥 burst');
       emitBurst(burstRef.current, W * 0.5, window.innerHeight * 0.5);
-    }, 1.5);
+    }, 0.3);
 
-    // ── T+2.0 — intensify glow, brief breathing hold
+    // ── T+0.9 — gold glow bloom
+    tl.to(emblem, {
+      filter: 'drop-shadow(0 0 28px rgba(212,175,55,0.55))',
+      duration: 0.35,
+    }, 0.9);
+
+    // ── T+1.4 — intensify glow
     tl.to(emblem, {
       filter: 'drop-shadow(0 0 42px rgba(212,175,55,0.75))',
-      duration: 0.5,
-    }, 2.0);
+      duration: 0.35,
+    }, 1.4);
 
-    // ── T+2.8 — boom: scale up and white flash
-    tl.to(emblem, { scale: 2.8, opacity: 0, duration: 0.4, ease: 'power2.inOut' }, 2.8);
-    tl.to(flash, { opacity: 0.97, scale: 2.5, duration: 0.25, ease: 'power3.out' }, 3.0);
+    // ── T+2.0 — boom: scale up and white flash
+    tl.to(emblem, { scale: 2.8, opacity: 0, duration: 0.35, ease: 'power2.inOut' }, 2.0);
+    tl.to(flash, { opacity: 0.97, scale: 2.5, duration: 0.22, ease: 'power3.out' }, 2.15);
 
-    // ── T+3.2 — flash dissolves, hero revealed
-    tl.to(flash, { opacity: 0, scale: 7, duration: 0.2 }, 3.2);
-    tl.to(overlay, { opacity: 0, duration: 0.25, ease: 'power2.in' }, 3.15);
+    // ── T+2.35 — flash dissolves, hero revealed
+    tl.to(flash, { opacity: 0, scale: 7, duration: 0.18 }, 2.35);
+    tl.to(overlay, { opacity: 0, duration: 0.22, ease: 'power2.in' }, 2.3);
 
     return () => { tl.kill(); console.log('[CinematicIntro] cleanup'); };
   }, []);
