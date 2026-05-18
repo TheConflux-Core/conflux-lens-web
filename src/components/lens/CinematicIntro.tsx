@@ -4,7 +4,6 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 
 const EMBLEM = '/original-emblem.png';  // Circular CONFLUX/LENS
-const SKIP_KEY = 'conflux-lens:hasSeenIntro';
 
 // ─── Particle burst ─────────────────────────────────────────────────────────
 function emitBurst(canvas: HTMLCanvasElement | null, cx: number, cy: number) {
@@ -55,10 +54,6 @@ export default function CinematicIntro() {
   useEffect(() => {
     // ─── Skip conditions ─────────────────────────────────────────────────
     if (typeof window === 'undefined') return;
-    if (window.sessionStorage.getItem(SKIP_KEY) === 'true') {
-      console.log('[CinematicIntro] skipping — seen this session');
-      return;
-    }
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       console.log('[CinematicIntro] skipping — reduced-motion');
       return;
@@ -80,7 +75,6 @@ export default function CinematicIntro() {
 
     const tl = gsap.timeline({
       onComplete: () => {
-        window.sessionStorage.setItem(SKIP_KEY, 'true');
         console.log('[CinematicIntro] ■ complete');
         setTimeout(() => { overlay.style.display = 'none'; }, 300);
       },
