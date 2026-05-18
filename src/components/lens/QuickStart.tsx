@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
-import { GitBranch, Terminal, Globe, Shield, Play } from 'lucide-react';
+import { GitBranch, Terminal, Globe, Shield, Play, Copy, Check, Zap } from 'lucide-react';
 
 const steps = [
   {
@@ -43,18 +43,56 @@ const steps = [
   }
 ];
 
+function CopyButton({ text, label }: { text: string; label: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-[#0D0D0D] border border-[#1F1F1F] hover:border-[#D4AF37] transition-all text-sm"
+    >
+      {copied ? (
+        <>
+          <Check size={14} className="text-[#28C840]" />
+          <span className="text-[#28C840]">Copied</span>
+        </>
+      ) : (
+        <>
+          <Copy size={14} className="text-[#888]" />
+          <span className="text-[#888]">{label}</span>
+        </>
+      )}
+    </button>
+  );
+}
+
 export default function QuickStart() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
   const [activeStep, setActiveStep] = useState(0);
   const [typedLines, setTypedLines] = useState(0);
 
-  // Auto-cycle through steps for animation
+  // Auto-cycle through steps — stop after all shown
   useEffect(() => {
     if (!isInView) return;
+
     const interval = setInterval(() => {
-      setActiveStep(prev => (prev + 1) % steps.length);
+      setActiveStep(prev => {
+        const next = prev + 1;
+        if (next >= steps.length) {
+          clearInterval(interval);
+          return prev; // stay on last step
+        }
+        return next;
+      });
     }, 3000);
+
     return () => clearInterval(interval);
   }, [isInView]);
 
@@ -75,7 +113,7 @@ export default function QuickStart() {
     <section
       id="quickstart"
       className="py-32 px-6 relative mesh-gradient-quickstart overflow-hidden"
-      ref={ref}
+      ref={sectionRef}
     >
       {/* Background grid */}
       <div className="absolute inset-0 grid-pattern opacity-30" />
@@ -96,7 +134,7 @@ export default function QuickStart() {
           initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-20"
+          className="text-center mb-16"
         >
           <span className="text-[#D4AF37] text-sm font-semibold tracking-wider uppercase mb-4 block">
             Get Running in 60 Seconds
@@ -108,6 +146,101 @@ export default function QuickStart() {
           <p className="text-[#888] text-xl max-w-2xl mx-auto">
             From zero to seeing every AI API call in under a minute.
           </p>
+        </motion.div>
+
+        {/* ═══════════════════════════════════════════════════════════════
+           One-Line Install Callout
+           ═══════════════════════════════════════════════════════════════ */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mb-20"
+        >
+          <div className="gold-border-glow rounded-2xl p-8 md:p-10 bg-[#0D0D0D] relative overflow-hidden">
+            {/* Subtle background shine */}
+            <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#F4D03F] opacity-[0.03] rounded-full blur-3xl pointer-events-none" />
+
+            <div className="flex flex-col lg:flex-row items-start gap-6 relative z-10">
+              {/* Left: badge + description */}
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-[#D4AF37]/20 to-[#F4D03F]/10 border border-[#D4AF37]/30">
+                    <Zap size={20} className="text-[#F4D03F]" />
+                  </div>
+                  <span className="shimmer-text font-bold text-lg">One-Line Install</span>
+                </div>
+                <p className="text-[#888] text-sm leading-relaxed max-w-md">
+                  No git clone, no npm install — just run one command and
+                  everything is set up automatically.
+                </p>
+              </div>
+
+              {/* Right: command lines */}
+              <div className="flex-1 w-full space-y-3">
+                {/* Linux/macOS */}
+                <div className="code-block">
+                  <div className="code-header">
+                    <div className="dot dot-red" />
+                    <div className="dot dot-yellow" />
+                    <div className="dot dot-green" />
+                    <span className="text-[#888] text-xs ml-2">macOS / Linux</span>
+                    <div className="ml-auto">
+                      <CopyButton
+                        text="curl -fsSL https://lens.theconflux.com/install.sh | bash"
+                        label="Copy"
+                      />
+                    </div>
+                  </div>
+                  <pre className="p-4 font-mono text-sm overflow-x-auto bg-[#080808]">
+                    <code className="text-[#28C840]">
+                      curl -fsSL https://lens.theconflux.com/install.sh | bash
+                    </code>
+                  </pre>
+                </div>
+
+                {/* Windows */}
+                <div className="code-block">
+                  <div className="code-header">
+                    <div className="dot dot-red" />
+                    <div className="dot dot-yellow" />
+                    <div className="dot dot-green" />
+                    <span className="text-[#888] text-xs ml-2">Windows PowerShell</span>
+                    <div className="ml-auto">
+                      <CopyButton
+                        text='powershell -c "irm https://lens.theconflux.com/install.ps1 | iex"'
+                        label="Copy"
+                      />
+                    </div>
+                  </div>
+                  <pre className="p-4 font-mono text-sm overflow-x-auto bg-[#080808]">
+                    <code className="text-[#28C840]">
+                      powershell -c &quot;irm https://lens.theconflux.com/install.ps1 | iex&quot;
+                    </code>
+                  </pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ═══════════════════════════════════════════════════════════════
+           Full Install (Manual) — existing steps below
+           ═══════════════════════════════════════════════════════════════ */}
+
+        {/* Manual install header */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.4, delay: 0.4 }}
+          className="flex items-center gap-4 mb-10"
+        >
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#1F1F1F] to-transparent" />
+          <span className="inline-flex items-center gap-2 text-[#888] text-sm font-medium tracking-wide uppercase">
+            <Terminal size={14} />
+            Full Install (Manual)
+          </span>
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#1F1F1F] to-transparent" />
         </motion.div>
 
         {/* Steps */}
