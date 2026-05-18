@@ -283,12 +283,18 @@ export default function QuickStart() {
                     <span className="text-[#888] text-sm ml-2">{step.title.toLowerCase().replace(' ', '-')}</span>
                   </div>
                   <pre className="p-4 font-mono text-sm overflow-x-auto bg-[#080808]">
-                    {step.code.split('\n').slice(0, typedLines).map((line, i) => (
-                      <div key={i} className={line.startsWith('#') ? 'text-[#888]' : 'text-[#FAFAFA]'}>
-                        {line || ' '}
-                      </div>
-                    ))}
-                    {typedLines < step.code.split('\n').length && (
+                    {index === activeStep
+                      ? step.code.split('\n').slice(0, typedLines).map((line, i) => (
+                          <div key={i} className={line.startsWith('#') ? 'text-[#888]' : 'text-[#FAFAFA]'}>
+                            {line || ' '}
+                          </div>
+                        ))
+                      : step.code.split('\n').map((line, i) => (
+                          <div key={i} className={line.startsWith('#') ? 'text-[#888]' : 'text-[#FAFAFA]'}>
+                            {line || ' '}
+                          </div>
+                        ))}
+                    {index === activeStep && typedLines < step.code.split('\n').length && (
                       <span className="text-[#F4D03F] animate-pulse">▋</span>
                     )}
                   </pre>
