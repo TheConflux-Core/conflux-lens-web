@@ -130,6 +130,7 @@ body {
   align-items: center;
   justify-content: center;
   pointer-events: none;
+  opacity: 0;
 }
 
 .cinematic-black {
@@ -154,6 +155,7 @@ body {
   object-fit: contain;
   pointer-events: none;
   will-change: transform, opacity, filter;
+  opacity: 0;
 }
 
 /* Burst canvas layers */
