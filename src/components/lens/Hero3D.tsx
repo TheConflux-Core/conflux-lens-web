@@ -5,6 +5,73 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, Icosahedron, MeshDistortMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 
+// ================================================================
+// Hero Emblem Ring — the crosshair+lens emblem as a 3D ring
+// floating behind the hero text, between particles and core
+// ================================================================
+function HeroEmblemRing() {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const iconHaloRef = useRef<THREE.Mesh>(null);
+  const ringGlowRef = useRef<THREE.Mesh>(null);
+
+  useFrame(({ clock }) => {
+    const t = clock.getElapsedTime();
+    if (meshRef.current) {
+      // Slow rotation — subtle, almost imperceptible
+      meshRef.current.rotation.z = Math.sin(t * 0.08) * 0.15;
+      meshRef.current.rotation.x = t * 0.03;
+      const breathe = 1 + Math.sin(t * 0.5) * 0.025;
+      meshRef.current.scale.setScalar(breathe);
+    }
+    if (ringGlowRef.current) {
+      ringGlowRef.current.rotation.z = -t * 0.05;
+      ringGlowRef.current.rotation.x = t * 0.02;
+    }
+    if (iconHaloRef.current) {
+      const pulse = 0.06 + Math.sin(t * 1.5) * 0.025;
+      iconHaloRef.current.scale.setScalar(pulse);
+    }
+  });
+
+  return (
+    <Float speed={0.6} rotationIntensity={0.05} floatIntensity={0.4}>
+      {/* Main emblem ring */}
+      <mesh ref={meshRef} position={[0, 0, -2.5]}>
+        <ringGeometry args={[2.8, 3.8, 128]} />
+        <meshBasicMaterial
+          color="#F4D03F"
+          transparent
+          opacity={0.12}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+
+      {/* Outer halo ring */}
+      <mesh ref={ringGlowRef} position={[0, 0, -2.6]}>
+        <ringGeometry args={[3.6, 5.0, 64]} />
+        <meshBasicMaterial
+          color="#D4AF37"
+          transparent
+          opacity={0.06}
+          side={THREE.DoubleSide}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+
+      {/* Inner glow dot (lens core) */}
+      <mesh ref={iconHaloRef} position={[0, 0, -2.4]}>
+        <circleGeometry args={[0.35, 32]} />
+        <meshBasicMaterial
+          color="#F4D03F"
+          transparent
+          opacity={0.45}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+    </Float>
+  );
+}
+
 function SlowParticles({ count = 200 }) {
   const mesh = useRef<THREE.Points>(null);
   
@@ -127,6 +194,7 @@ function Scene() {
       <pointLight position={[0, 3, 2]} intensity={1.5} color="#FFFFFF" />
       
       <SlowParticles count={180} />
+      <HeroEmblemRing />
       <LensCore />
       <SubtleGlowRing />
       <AmbientGlow />
