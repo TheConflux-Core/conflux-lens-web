@@ -11,18 +11,26 @@ const codeExamples = [
     language: 'typescript',
     code: `import { createProxyServer } from '@theconflux/lens-sdk';
 
-const proxy = createProxyServer({ 
+const proxy = createProxyServer({
   port: 9876,
-  https: true 
-});
-
-proxy.on('request', (ctx) => {
-  console.log('→', ctx.request.url);
-  console.log('Tokens:', ctx.usage?.total_tokens);
+  host: '127.0.0.1',
+  wsPort: 9877,
+  logLevel: 'info',
+  autoConfigureTrust: true,
 });
 
 await proxy.start();
-console.log('Proxy running at localhost:9876');`
+console.log('Proxy running at http://127.0.0.1:9876');
+
+const exchanges = proxy.getExchanges();
+console.log(\`Captured \${exchanges.length} exchanges\`);
+
+// Export to HAR
+import * as fs from 'fs';
+const har = proxy.exportHar();
+fs.writeFileSync('capture.har', JSON.stringify(har, null, 2));
+
+await proxy.stop();`
   },
   {
     title: 'Interceptor Mode',
@@ -32,46 +40,61 @@ console.log('Proxy running at localhost:9876');`
 const interceptor = createInterceptor({
   target: 'all',
   captureBody: true,
-  
-  onRequest: (ctx) => {
-    console.log('LLM Request:', ctx.method);
-    console.log('Model:', ctx.model);
-    console.log('System Prompt:', ctx.systemPrompt);
+  maxBodySize: 100000,
+  onRequest: (context) => {
+    const { request } = context;
+    if (request.url.includes('openai.com') || request.url.includes('anthropic.com')) {
+      console.log('LLM Request:', request.method, request.url);
+      if (request.body) {
+        console.log('Body:', request.body);
+      }
+    }
   },
-  
-  onResponse: (ctx) => {
-    console.log('Tokens:', ctx.usage?.total_tokens);
-    console.log('Cost: $', ctx.cost?.estimated);
-  }
+  onResponse: (context) => {
+    const { request, response } = context;
+    if (request.url.includes('openai.com') || request.url.includes('anthropic.com')) {
+      console.log('LLM Response:', response.statusCode, request.url);
+      console.log('Duration:', response.duration, 'ms');
+    }
+  },
 });
 
-await interceptor.start(); // No proxy config needed!`
+console.log('Interceptor enabled — no proxy config needed');
+console.log('Make HTTP requests to see them captured.');
+
+// Later: interceptor.disable();`
   },
   {
     title: 'WebSocket Live Feed',
     language: 'typescript',
     code: `import { AgentClient } from '@theconflux/lens-sdk';
 
-const client = new AgentClient({
-  proxyUrl: 'ws://localhost:9877'
+const agent = new AgentClient({
+  proxyHost: '127.0.0.1',
+  proxyPort: 9876,
+  wsPort: 9877,
+  sessionId: 'my-agent-session',
+  autoConnect: true,
 });
 
-client.on('frame', (frame) => {
-  const { method, url, statusCode, usage } = frame;
-  
-  // Real-time request/response data
-  console.log(\`\${method} \${url} → \${statusCode}\`);
-  console.log(\`Tokens: \${usage?.prompt_tokens} + \${usage?.completion_tokens}\`);
-  
-  // Tool calls if present
-  if (frame.toolCalls) {
-    frame.toolCalls.forEach(tc => {
-      console.log(\`🔧 Tool: \${tc.function.name}\`);
-    });
+agent.on('exchange', (exchange) => {
+  const { request, response } = exchange;
+  console.log(\`\${request.method} \${request.url} → \${response?.statusCode}\`);
+  if (response?.tokenCount) {
+    console.log(\`Tokens: \${response.tokenCount.prompt} + \${response.tokenCount.completion}\`);
   }
 });
 
-await client.connect();`
+agent.on('breakpoint_hit', (data) => {
+  console.log('Paused at exchange:', data.exchangeId);
+});
+
+agent.on('disconnect', () => {
+  console.log('Disconnected from proxy');
+});
+
+await agent.connect();
+console.log('Agent connected — receiving live events');`
   }
 ];
 
