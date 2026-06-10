@@ -4,13 +4,22 @@
  * this website's public/ directory so the one-liner URLs always serve the
  * latest version.
  *
- * Source: ../conflux-lens/scripts/install.{sh,ps1}
- * Target: public/install.{sh,ps1}
+ * Source: ../conflux-lens/scripts/install.{sh,ps1}  (when available)
+ * Target: public/install.{sh,ps1}                    (always committed)
  *
  * Runs automatically as `prebuild` and `predev` in package.json.
  * Can be invoked manually with: npm run sync-install-scripts
  *
- * Exits non-zero if the source scripts are missing or unreadable.
+ * Behavior:
+ * - On a dev machine with the sibling `conflux-lens` repo checked out
+ *   alongside this one, syncs the latest scripts into public/ so the
+ *   website always serves fresh copies.
+ * - On a fresh clone (e.g. Vercel's build environment), the sibling
+ *   repo is not present — in that case we WARN and SKIP, never fail.
+ *   The committed public/install.{sh,ps1} files deploy as-is.
+ *
+ * This script never exits non-zero, because failing the build when the
+ * sibling repo is missing is wrong — the public/ copies are good enough.
  */
 
 const fs = require('fs');
@@ -21,14 +30,26 @@ const TARGET_DIR = path.resolve(__dirname, '../public');
 
 const SCRIPTS = ['install.sh', 'install.ps1'];
 
-let ok = true;
+// Bail out cleanly if the canonical source directory doesn't exist.
+// This is the Vercel case — only the website repo is checked out.
+if (!fs.existsSync(SOURCE_DIR)) {
+  console.log(
+    `[sync-install-scripts] sibling source not found at ${SOURCE_DIR} — using committed copies in public/`
+  );
+  console.log(
+    `[sync-install-scripts] (this is normal on CI; run \`npm run sync-install-scripts\` locally to refresh)`
+  );
+  process.exit(0);
+}
+
+let synced = 0;
+let upToDate = 0;
 for (const name of SCRIPTS) {
   const src = path.join(SOURCE_DIR, name);
   const dst = path.join(TARGET_DIR, name);
   try {
     if (!fs.existsSync(src)) {
-      console.error(`[sync-install-scripts] missing source: ${src}`);
-      ok = false;
+      console.warn(`[sync-install-scripts] WARNING: source missing: ${src} — skipping`);
       continue;
     }
     const sourceStat = fs.statSync(src);
@@ -42,16 +63,15 @@ for (const name of SCRIPTS) {
     if (shouldCopy) {
       fs.copyFileSync(src, dst);
       console.log(`[sync-install-scripts] synced ${name} (${sourceStat.size} bytes)`);
+      synced += 1;
     } else {
       console.log(`[sync-install-scripts] up to date: ${name}`);
+      upToDate += 1;
     }
   } catch (err) {
-    console.error(`[sync-install-scripts] failed to sync ${name}: ${err.message}`);
-    ok = false;
+    console.warn(`[sync-install-scripts] WARNING: failed to sync ${name}: ${err.message} — skipping`);
   }
 }
 
-if (!ok) {
-  console.error('[sync-install-scripts] one or more scripts failed to sync');
-  process.exit(1);
-}
+console.log(`[sync-install-scripts] done (${synced} synced, ${upToDate} up to date)`);
+process.exit(0);
