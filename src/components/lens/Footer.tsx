@@ -56,7 +56,7 @@ export default function Footer() {
                 <span className="text-sm">GitHub</span>
               </a>
               <a 
-                href="https://www.npmjs.com/package/@conflux/sdk" 
+                href="https://www.npmjs.com/package/@theconflux/lens-sdk" 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-[#888] hover:text-[#F4D03F] transition-colors"

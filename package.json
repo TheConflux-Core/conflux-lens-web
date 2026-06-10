@@ -4,6 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/sync-install-scripts.js",
+    "predev": "node scripts/sync-install-scripts.js",
+    "sync-install-scripts": "node scripts/sync-install-scripts.js",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

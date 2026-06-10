@@ -345,7 +345,7 @@ show_next_steps() {
      See README for Firefox, Edge, macOS, and Windows system-wide setup.
 
   5. Install the SDK in your project:
-     npm install @conflux/sdk ws
+     npm install @theconflux/lens-sdk ws
 
 NEXT
 }

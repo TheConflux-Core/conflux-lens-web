@@ -126,7 +126,7 @@ export default function RootLayout({
     url: "https://lens.theconflux.com",
     sameAs: [
       "https://github.com/TheConflux-Core/conflux-lens",
-      "https://www.npmjs.com/package/@conflux/sdk",
+      "https://www.npmjs.com/package/@theconflux/lens-sdk",
     ],
     offers: {
       "@type": "Offer",

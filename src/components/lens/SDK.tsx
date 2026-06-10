@@ -9,7 +9,7 @@ const codeExamples = [
   {
     title: 'Proxy Server',
     language: 'typescript',
-    code: `import { createProxyServer } from '@conflux/sdk';
+    code: `import { createProxyServer } from '@theconflux/lens-sdk';
 
 const proxy = createProxyServer({ 
   port: 9876,
@@ -27,7 +27,7 @@ console.log('Proxy running at localhost:9876');`
   {
     title: 'Interceptor Mode',
     language: 'typescript',
-    code: `import { createInterceptor } from '@conflux/sdk';
+    code: `import { createInterceptor } from '@theconflux/lens-sdk';
 
 const interceptor = createInterceptor({
   target: 'all',
@@ -50,7 +50,7 @@ await interceptor.start(); // No proxy config needed!`
   {
     title: 'WebSocket Live Feed',
     language: 'typescript',
-    code: `import { AgentClient } from '@conflux/sdk';
+    code: `import { AgentClient } from '@theconflux/lens-sdk';
 
 const client = new AgentClient({
   proxyUrl: 'ws://localhost:9877'
@@ -182,7 +182,7 @@ export default function SDK() {
         >
           <div className="inline-flex items-center gap-3 bg-[#0D0D0D] border border-[#1F1F1F] rounded-full px-6 py-3">
             <span className="text-[#888]">npm install</span>
-            <span className="shimmer-text font-mono font-bold">@conflux/sdk ws</span>
+            <span className="shimmer-text font-mono font-bold">@theconflux/lens-sdk ws</span>
           </div>
         </motion.div>
       </div>
